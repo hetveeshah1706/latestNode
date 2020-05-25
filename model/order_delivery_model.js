@@ -40,16 +40,23 @@ var order_delivery={
     },
     AddOrderAssigned:function(item,callback)
     {
+        // console.log(item)
         var arr1=[];
         if(item != null) {
+          console.log(item.selectedOrderArr.length)
             for (let i = 0; i < item.selectedOrderArr.length; i++) {
-                const order_id = item.selectedOrderArr[i];
+                const order_id = item.selectedOrderArr[i].order_id;
+                const order_delivery_id=item.selectedOrderArr[i].order_delivery_id;
                 const emp_id = item.selectedEmployeeID;
                 const delivery_date=new Date();
                 const comment="Assigned"
-                arr1.push([order_id,emp_id,delivery_date,comment]);
+                arr1.push([order_delivery_id,order_id,emp_id,delivery_date,comment]);
+                // arr2.push([order_delivery_id]);
             }
-           return db.query("insert into order_delivery_table (fk_order_id,fk_emp_id,delivery_date,comment) values ?",[arr1],callback); 
+            console.log(arr1)
+          //  return db.query("insert into order_delivery_table (fk_order_id,fk_emp_id,delivery_date,comment) values ?",[arr1],callback); 
+          // return db.query("update order_delivery_table set (fk_order_id,fk_emp_id,delivery_date,comment) values ? where order_delivery_id IN (?)",[arr1,arr2],callback)
+            return db.query("INSERT into order_delivery_table (order_delivery_id,fk_order_id,fk_emp_id,delivery_date,comment) VALUES ? ON DUPLICATE KEY UPDATE fk_order_id = VALUES(fk_order_id),fk_emp_id = VALUES(fk_emp_id),delivery_date = VALUES(delivery_date),comment = VALUES(comment)",[arr1],callback)
         }
     },
     addOrderDeliveryUserSide:function(item,callback){

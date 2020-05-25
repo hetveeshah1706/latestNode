@@ -12,7 +12,9 @@ router.get('/',function(req,res,next){
     })
 }),
 router.post('/',function(req,res,next){
+    console.log("in");
     order_Notassigned_router.AddOrderAssigned(req.body,function(err,rows){                   //Insert
+
         if(err)
         {
             res.json(err);
